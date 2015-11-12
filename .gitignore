@@ -1,0 +1,44 @@
+# Mac filetypes
+.DS_Store
+
+# built application files
+*.apk
+*.ap_
+
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# generated files
+bin/
+gen/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Eclipse project files
+proguard/
+.metadata/
+
+
+# Intellij project files
+*.iml
+*.ipr
+*.iws
+.idea/
+out/
+
+# anothers
+.orig
+
+#gradle
+build/
+wallet-android/build/
+libraries/CoverFlowLibrary/build
+libraries/EnppClientLibrary/build
+libraries/MovilokLibrary/build
+libraries/SlidingMenuLibrary/build
+libraries/IndexableListView/build
+.gradle/
