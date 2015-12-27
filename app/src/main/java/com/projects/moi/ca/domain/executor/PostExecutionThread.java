@@ -21,4 +21,5 @@ package com.projects.moi.ca.domain.executor;
  * implementation of this interface will change context and update the UI.
  */
 public interface PostExecutionThread {
+    void post(final Runnable runnable);
 }

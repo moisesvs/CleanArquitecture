@@ -15,11 +15,20 @@ package com.projects.moi.ca.presentation.presenter;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import android.support.annotation.NonNull;
 
+import com.projects.moi.ca.domain.News;
+import com.projects.moi.ca.domain.executor.PostExecutionThread;
+import com.projects.moi.ca.domain.executor.ThreadExecutor;
+import com.projects.moi.ca.domain.interactor.GetNewList;
+import com.projects.moi.ca.domain.interactor.GetNewsListUseCase;
+import com.projects.moi.ca.domain.repository.NewsRepository;
 import com.projects.moi.ca.presentation.view.activity.view.NewsView;
 
-public class NewsListPresenter implements Presenter {
+import java.util.List;
+
+public class NewsListPresenter implements Presenter, GetNewList.Callback {
 
     /**
      * The news view
@@ -27,10 +36,17 @@ public class NewsListPresenter implements Presenter {
     private NewsView view;
 
     /**
+     * Get news list
+     */
+    private GetNewsListUseCase newsList;
+
+    /**
      * New list presenter
      */
-    public NewsListPresenter() {
-        // nothing
+    public NewsListPresenter(@NonNull NewsRepository repository,
+                             ThreadExecutor executor,
+                             PostExecutionThread postExecutionThread) {
+        newsList = new GetNewsListUseCase(repository, executor, postExecutionThread, this);
     }
 
     /**
@@ -90,11 +106,9 @@ public class NewsListPresenter implements Presenter {
         this.view.hideRetry();
     }
 
-//    private void showErrorMessage(ErrorBundle errorBundle) {
-//        String errorMessage = ErrorMessageFactory.create(this.viewListView.getContext(),
-//                errorBundle.getException());
-//        this.viewListView.showError(errorMessage);
-//    }
+    private void showErrorMessage() {
+        this.view.showError("Error ");
+    }
 
 //    private void showUsersCollectionInView(Collection<User> usersCollection) {
 //        final Collection<UserModel> userModelsCollection =
@@ -102,8 +116,26 @@ public class NewsListPresenter implements Presenter {
 //        this.viewListView.renderUserList(userModelsCollection);
 //    }
 
+    /**
+     * Get user list
+     */
     private void getUserList() {
-//        this.getUserListUseCase.execute(new UserListSubscriber());
+        newsList.execute();
+    }
+
+    @Override
+    public void onNewsShowLoaded(List<News> newsList) {
+        this.view.notificationNewsList(newsList);
+    }
+
+    @Override
+    public void onNewsEmpty() {
+
+    }
+
+    @Override
+    public void onConnectionError() {
+
     }
 
 //    private final class UserListSubscriber extends DefaultSubscriber<List<User>> {

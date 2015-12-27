@@ -19,7 +19,7 @@ package com.projects.moi.ca.domain.interactor;
 import com.projects.moi.ca.domain.executor.PostExecutionThread;
 import com.projects.moi.ca.domain.executor.ThreadExecutor;
 
-public class UseCase {
+public class UseCase implements UseCaseInterface {
 
     /**
      * Thread executor
@@ -44,12 +44,22 @@ public class UseCase {
 
     /**
      * Executes the current use case.
-     *
-     * @param UseCaseSubscriber The guy who will be listen to the observable build with {@link #buildUseCaseObservable()}.
      */
     @SuppressWarnings("unchecked")
     public void execute() {
-        // execute
+        threadExecutor.execute(this);
     }
 
+    @Override
+    public void run() {
+        // nothing
+    }
+
+    /**
+     * Post execution thread
+     * @return the post execution thread
+     */
+    public PostExecutionThread getPostExecutionThread() {
+        return postExecutionThread;
+    }
 }

@@ -15,6 +15,10 @@
  */
 package com.projects.moi.ca.presentation.view.activity.view;
 
+import com.projects.moi.ca.domain.News;
+
+import java.util.List;
+
 /**
  * Interface representing a View in a model view presenter (MVP) pattern.
  * In this case is used as a view representing a list of {@link UserModel}.
@@ -25,4 +29,10 @@ public interface NewsView extends BaseView {
      * Retrieve the news
      */
     void retrieveNews();
+
+    /**
+     * News list retrieve
+     */
+    void notificationNewsList (List<News> list);
+
 }

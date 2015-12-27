@@ -16,14 +16,19 @@ package com.projects.moi.ca.domain.interactor;
  * limitations under the License.
  */
 
+import android.support.annotation.NonNull;
+
+import com.projects.moi.ca.domain.News;
 import com.projects.moi.ca.domain.executor.PostExecutionThread;
 import com.projects.moi.ca.domain.executor.ThreadExecutor;
 import com.projects.moi.ca.domain.repository.NewsRepository;
 
+import java.util.List;
+
 /**
  * Get news list
  */
-public class GetNewsList extends UseCase {
+public class GetNewsListUseCase extends UseCase {
 
     /**
      * The new repository
@@ -31,15 +36,38 @@ public class GetNewsList extends UseCase {
     private final NewsRepository newRepository;
 
     /**
+     * The callback
+     */
+    private final GetNewList.Callback callback;
+
+    /**
      * Default constructor get new list
      * @param newRepository the new repository
      * @param threadExecutor the thread executor
      * @param postExecutionThread the post execution thread
      */
-    public GetNewsList(NewsRepository newRepository, ThreadExecutor threadExecutor,
-                       PostExecutionThread postExecutionThread) {
+    public GetNewsListUseCase(@NonNull NewsRepository newRepository,
+                              ThreadExecutor threadExecutor,
+                              PostExecutionThread postExecutionThread,
+                              GetNewList.Callback callback) {
         super(threadExecutor, postExecutionThread);
         this.newRepository = newRepository;
+        this.callback = callback;
     }
 
+    /**
+     * The run execute
+     */
+    @Override
+    public void run() {
+        super.run();
+        final List<News> list = this.newRepository.news();
+
+        getPostExecutionThread().post(new Runnable() {
+            @Override
+            public void run() {
+                callback.onNewsShowLoaded(list);
+            }
+        });
+    }
 }

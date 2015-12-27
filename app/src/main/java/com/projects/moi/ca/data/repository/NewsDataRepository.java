@@ -21,6 +21,7 @@ import com.projects.moi.ca.data.repository.datasource.NewsDataStoreFactory;
 import com.projects.moi.ca.domain.News;
 import com.projects.moi.ca.domain.repository.NewsRepository;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,8 +55,30 @@ public class NewsDataRepository implements NewsRepository {
     @Override
     public List<News> news() {
         //we always get all users from the cloud
-        final NewsDataStore userDataStore = this.newsDataStoreFactory.createCloudDataStore();
-        return new ArrayList<>();
+        if (this.newsDataStoreFactory != null) {
+            final NewsDataStore userDataStore = this.newsDataStoreFactory.createCloudDataStore();
+        }
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<News> newsList = new ArrayList<>();
+        newsList.add(new News("New 1", "The new 1"));
+        newsList.add(new News("New 2", "The new 2"));
+        newsList.add(new News("New 3", "The new 3"));
+        newsList.add(new News("New 4", "The new 4"));
+        newsList.add(new News("New 5", "The new 5"));
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return newsList;
 
 //        return userDataStore.userEntityList()
 //                .map(userEntities -> this.userEntityDataMapper.transform(userEntities));

@@ -2,10 +2,17 @@ package com.projects.moi.ca.presentation.view.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.view.View;
+import android.widget.Toast;
 
 import com.projects.moi.ca.R;
+import com.projects.moi.ca.domain.News;
+import com.projects.moi.ca.presentation.CaApplication;
 import com.projects.moi.ca.presentation.presenter.NewsListPresenter;
 import com.projects.moi.ca.presentation.view.activity.view.NewsView;
+
+import java.util.List;
 
 public class NewsActivity extends BaseActivity implements NewsView {
 
@@ -16,15 +23,26 @@ public class NewsActivity extends BaseActivity implements NewsView {
 
     /**
      * On create activity
-     * @param savedInstanceState
+     * @param savedInstanceState on saved instace
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        CaApplication app = CaApplication.getInstance();
+
         setContentView(R.layout.activity_test);
 
-        presenter = new NewsListPresenter();
+        presenter = new NewsListPresenter(app.getNewsRepository(), app.getExecutor(), app.getPostExecution());
         presenter.setView(this);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                retrieveNews();
+            }
+        });
     }
 
     @Override
@@ -60,6 +78,15 @@ public class NewsActivity extends BaseActivity implements NewsView {
     @Override
     public void retrieveNews() {
         presenter.loadNewsList();
+    }
+
+    @Override
+    public void notificationNewsList(List<News> list) {
+        if ((list != null) && (list.size() > 0)) {
+            Toast.makeText(this, "List de news recibida: " + list.get(0).getDescription(), Toast.LENGTH_LONG);
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -111,4 +138,5 @@ public class NewsActivity extends BaseActivity implements NewsView {
     public Context getContext() {
         return null;
     }
+
 }
