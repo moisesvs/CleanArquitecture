@@ -91,7 +91,7 @@ public class NewsCacheImpl implements NewsCache {
         }
     }
 
-    @Override public boolean isCached(int userId) {
+    @Override public boolean isCached() {
 //        File userEntitiyFile = this.buildFile(userId);
 //        return this.fileManager.exists(userEntitiyFile);
 

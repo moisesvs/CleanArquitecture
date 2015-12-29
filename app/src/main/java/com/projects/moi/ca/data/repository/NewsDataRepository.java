@@ -15,6 +15,7 @@ package com.projects.moi.ca.domain.interactor;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import com.projects.moi.ca.data.entity.NewsEntity;
 import com.projects.moi.ca.data.entity.mapper.NewsEntityDataMapper;
 import com.projects.moi.ca.data.repository.datasource.NewsDataStore;
 import com.projects.moi.ca.data.repository.datasource.NewsDataStoreFactory;
@@ -54,28 +55,19 @@ public class NewsDataRepository implements NewsRepository {
 
     @Override
     public List<News> news() {
+        NewsDataStore storeNews = null;
+        ArrayList<News> newsList = null;
+
         //we always get all users from the cloud
         if (this.newsDataStoreFactory != null) {
-            final NewsDataStore userDataStore = this.newsDataStoreFactory.createCloudDataStore();
-        }
-
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        ArrayList<News> newsList = new ArrayList<>();
-        newsList.add(new News("New 1", "The new 1"));
-        newsList.add(new News("New 2", "The new 2"));
-        newsList.add(new News("New 3", "The new 3"));
-        newsList.add(new News("New 4", "The new 4"));
-        newsList.add(new News("New 5", "The new 5"));
-
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            storeNews = this.newsDataStoreFactory.create();
+            List<NewsEntity> newsEntityList = storeNews.newsEntityList();
+            if (newsEntityList != null) {
+                newsList = new ArrayList<>();
+                for (NewsEntity newEntity : newsEntityList) {
+                    newsList.add(new News(newEntity.getTitle(), newEntity.getDescription()));
+                }
+            }
         }
 
         return newsList;

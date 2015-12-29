@@ -11,5 +11,5 @@ public interface NewsDataStore {
     /**
      * Get an which will emit a List of {@link NewsEntity}.
      */
-    List<NewsEntity> userEntityList();
+    List<NewsEntity> newsEntityList();
 }

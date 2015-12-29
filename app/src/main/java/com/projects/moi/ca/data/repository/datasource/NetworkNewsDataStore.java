@@ -17,14 +17,19 @@ package com.projects.moi.ca.data.repository.datasource;
 
 import com.projects.moi.ca.data.cache.NewsCache;
 import com.projects.moi.ca.data.entity.NewsEntity;
+import com.projects.moi.ca.data.net.RestApi;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * {@link NewsDataStore} implementation based on connections to the api (Cloud).
  */
 public class NetworkNewsDataStore implements NewsDataStore {
+
+    /**
+     * The rest api network rest api
+     */
+    private final RestApi restApi;
 
     /**
      * The news cache
@@ -36,16 +41,18 @@ public class NetworkNewsDataStore implements NewsDataStore {
      *
      * @param newsCache A {@link NewsCache} to cache data retrieved from the api.
      */
-    public NetworkNewsDataStore(NewsCache newsCache) {
+    public NetworkNewsDataStore(RestApi restApi, NewsCache newsCache) {
+        this.restApi = restApi;
         this.newsCache = newsCache;
     }
 
     /**
-     * User entity list
+     * News entity list
      * @return the new entity list
      */
     @Override
-    public List<NewsEntity> userEntityList() {
-        return new ArrayList<NewsEntity>();
+    public List<NewsEntity> newsEntityList() {
+        return this.restApi.newsEntityList();
     }
+
 }

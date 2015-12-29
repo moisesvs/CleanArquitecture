@@ -31,6 +31,11 @@ import java.util.List;
 public class GetNewsListUseCase extends UseCase {
 
     /**
+     * Wait time
+     */
+    private static final long WAIT_TIME = 5000;
+
+    /**
      * The new repository
      */
     private final NewsRepository newRepository;
@@ -61,6 +66,7 @@ public class GetNewsListUseCase extends UseCase {
     @Override
     public void run() {
         super.run();
+
         final List<News> list = this.newRepository.news();
 
         getPostExecutionThread().post(new Runnable() {
@@ -69,5 +75,18 @@ public class GetNewsListUseCase extends UseCase {
                 callback.onNewsShowLoaded(list);
             }
         });
+    }
+
+    /**
+     * To simulate a we are getting the TvShows data from internet we are going to force a 1.5
+     * seconds
+     * delay using Thread.sleep.
+     */
+    private void waitToDoThisSampleMoreInteresting() {
+        try {
+            Thread.sleep(WAIT_TIME);
+        } catch (InterruptedException e) {
+            //Empty
+        }
     }
 }

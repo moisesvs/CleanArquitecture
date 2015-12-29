@@ -25,6 +25,9 @@ import java.util.List;
  */
 public class DiskNewsDataStore implements NewsDataStore {
 
+    /**
+     * The news cache
+     */
     private final NewsCache newsCache;
 
     /**
@@ -41,10 +44,11 @@ public class DiskNewsDataStore implements NewsDataStore {
      * @return the news entity
      */
     @Override
-    public List<NewsEntity> userEntityList() {
+    public List<NewsEntity> newsEntityList() {
 //        //TODO: implement simple cache for storing/retrieving collections of users.
 //        throw new UnsupportedOperationException("Operation is not available!!!");
 
         return null;
     }
+
 }

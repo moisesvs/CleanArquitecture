@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
-import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
 import com.projects.moi.ca.R;
 import com.projects.moi.ca.domain.News;
 import com.projects.moi.ca.presentation.CaApplication;
@@ -15,6 +15,11 @@ import com.projects.moi.ca.presentation.view.activity.view.NewsView;
 import java.util.List;
 
 public class NewsActivity extends BaseActivity implements NewsView {
+
+    /**
+     * The tag activity
+     */
+    private static final String TAG = "NewsActivity";
 
     /**
      * New list presenter
@@ -28,6 +33,7 @@ public class NewsActivity extends BaseActivity implements NewsView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Logger.init(TAG);
 
         CaApplication app = CaApplication.getInstance();
 
@@ -80,12 +86,18 @@ public class NewsActivity extends BaseActivity implements NewsView {
         presenter.loadNewsList();
     }
 
+    /**
+     * Notification news list
+     * @param list the new list
+     */
     @Override
     public void notificationNewsList(List<News> list) {
         if ((list != null) && (list.size() > 0)) {
-            Toast.makeText(this, "List de news recibida: " + list.get(0).getDescription(), Toast.LENGTH_LONG);
-            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-            fab.setVisibility(View.GONE);
+            Logger.v("List de news recibida: " + list.get(0).getDescription());
+
+            // hide the fab button
+//            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//            fab.setVisibility(View.GONE);
         }
     }
 

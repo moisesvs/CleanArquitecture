@@ -3,7 +3,10 @@ package com.projects.moi.ca.presentation;
 import android.app.Activity;
 import android.app.Application;
 
+import com.projects.moi.ca.data.cache.NewsCache;
+import com.projects.moi.ca.data.cache.NewsCacheImpl;
 import com.projects.moi.ca.data.executor.JobExecutor;
+import com.projects.moi.ca.data.repository.datasource.NewsDataStoreFactory;
 import com.projects.moi.ca.domain.executor.PostExecution;
 import com.projects.moi.ca.domain.executor.ThreadExecutor;
 import com.projects.moi.ca.domain.interactor.NewsDataRepository;
@@ -81,7 +84,9 @@ public class CaApplication extends Application     {
         instance = this;
 
         jobExecutor = new JobExecutor();
-        newsRepository = new NewsDataRepository(null, null);
+
+        NewsCache cache = new NewsCacheImpl(this, jobExecutor);
+        newsRepository = new NewsDataRepository(new NewsDataStoreFactory(this, cache), null);
         postExecution = new PostExecution();
 
 //        if (ConfigApp.DEBUG) {
