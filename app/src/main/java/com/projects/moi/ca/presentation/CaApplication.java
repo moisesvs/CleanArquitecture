@@ -3,14 +3,18 @@ package com.projects.moi.ca.presentation;
 import android.app.Activity;
 import android.app.Application;
 
+import com.projects.moi.ca.BuildConfig;
 import com.projects.moi.ca.data.cache.NewsCache;
 import com.projects.moi.ca.data.cache.NewsCacheImpl;
 import com.projects.moi.ca.data.executor.JobExecutor;
+import com.projects.moi.ca.data.net.HttpInvoker;
+import com.projects.moi.ca.data.net.HttpInvokerHelper;
 import com.projects.moi.ca.data.repository.datasource.NewsDataStoreFactory;
 import com.projects.moi.ca.domain.executor.PostExecution;
 import com.projects.moi.ca.domain.executor.ThreadExecutor;
 import com.projects.moi.ca.domain.interactor.NewsDataRepository;
 import com.projects.moi.ca.domain.repository.NewsRepository;
+import com.projects.moi.ca.logging.Log;
 
 /**
  * CaApplication is the visual application in charge of configuration screens
@@ -21,12 +25,22 @@ public class CaApplication extends Application     {
     /**
      * The application tag
      */
-    private static final String TAG = "WalletApplication";
+    private static final String TAG = "CaApplication";
 
     /**
      * Instance Ca application
      */
     private static CaApplication instance;
+
+    /**
+     * The logger
+     */
+    private Log logger;
+
+    /**
+     * The http invoker
+     */
+    private HttpInvoker httpInvoker;
 
     /**
      * The post execution
@@ -83,11 +97,16 @@ public class CaApplication extends Application     {
 
         instance = this;
 
+        logger = new Log(BuildConfig.DEBUG);
+
         jobExecutor = new JobExecutor();
 
         NewsCache cache = new NewsCacheImpl(this, jobExecutor);
         newsRepository = new NewsDataRepository(new NewsDataStoreFactory(this, cache), null);
         postExecution = new PostExecution();
+
+        HttpInvokerHelper enaxInvokerHelper = new HttpInvokerHelper(this, this.logger);
+        httpInvoker = enaxInvokerHelper.createHttpInvoker();
 
 //        if (ConfigApp.DEBUG) {
 //            // LeakCanary will automatically show a notification when an activity memory leak is detected in your debug build.
@@ -165,4 +184,19 @@ public class CaApplication extends Application     {
         }
     }
 
+    /**
+     * Get logger
+     * @return the logger
+     */
+    public Log getLogger() {
+        return logger;
+    }
+
+    /**
+     * Get http invoker
+     * @return the http invoker
+     */
+    public HttpInvoker getHttpInvoker() {
+        return httpInvoker;
+    }
 }

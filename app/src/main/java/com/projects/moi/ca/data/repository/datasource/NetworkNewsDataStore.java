@@ -17,8 +17,12 @@ package com.projects.moi.ca.data.repository.datasource;
 
 import com.projects.moi.ca.data.cache.NewsCache;
 import com.projects.moi.ca.data.entity.NewsEntity;
-import com.projects.moi.ca.data.net.RestApi;
+import com.projects.moi.ca.data.net.HttpInvoker;
+import com.projects.moi.ca.data.net.HttpRequest;
+import com.projects.moi.ca.data.net.response.HttpResponse;
+import com.projects.moi.ca.presentation.CaApplication;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,9 +31,9 @@ import java.util.List;
 public class NetworkNewsDataStore implements NewsDataStore {
 
     /**
-     * The rest api network rest api
+     * The http client
      */
-    private final RestApi restApi;
+    private HttpInvoker invoker;
 
     /**
      * The news cache
@@ -41,8 +45,8 @@ public class NetworkNewsDataStore implements NewsDataStore {
      *
      * @param newsCache A {@link NewsCache} to cache data retrieved from the api.
      */
-    public NetworkNewsDataStore(RestApi restApi, NewsCache newsCache) {
-        this.restApi = restApi;
+    public NetworkNewsDataStore(HttpInvoker invoker, NewsCache newsCache) {
+        this.invoker = invoker;
         this.newsCache = newsCache;
     }
 
@@ -52,7 +56,20 @@ public class NetworkNewsDataStore implements NewsDataStore {
      */
     @Override
     public List<NewsEntity> newsEntityList() {
-        return this.restApi.newsEntityList();
+        String API_BASE_URL = "https://raw.githubusercontent.com/BBC-News/app-search-data/master/";
+        String API_URL_GET_NEWS_LIST = API_BASE_URL + "search_tags_v3.1.json";
+
+        HttpRequest request = new HttpRequest(API_URL_GET_NEWS_LIST);
+        HttpResponse response = invoker.invokeOperation(request);
+        String body = response.getBody();
+        CaApplication.getInstance().getLogger().logLine("NetworkNewsDataStore", body);
+
+        List<NewsEntity> listEntity = new ArrayList<>();
+        listEntity.add(new NewsEntity("Test Network 1", "Description 1"));
+        listEntity.add(new NewsEntity("Test Network 2", "Description 2"));
+        listEntity.add(new NewsEntity("Test Network 3", "Description 3"));
+
+        return listEntity;
     }
 
 }

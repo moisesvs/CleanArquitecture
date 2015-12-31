@@ -4,13 +4,13 @@ import android.content.Context;
 
 import com.projects.moi.ca.data.cache.NewsCache;
 import com.projects.moi.ca.data.entity.mapper.NewsEntityJsonMapper;
-import com.projects.moi.ca.data.net.RestApi;
-import com.projects.moi.ca.data.net.RestApiImpl;
+import com.projects.moi.ca.data.net.HttpInvoker;
+import com.projects.moi.ca.presentation.CaApplication;
 
 /**
  * NewsDataStoreFactory
  *
- * @author (c) 2014, New Means of Payment, BBVA
+ * @author Moisés Vázquez Sánchez
  */
 public class NewsDataStoreFactory {
 
@@ -64,8 +64,9 @@ public class NewsDataStoreFactory {
      */
     public NewsDataStore createCloudDataStore() {
         NewsEntityJsonMapper userEntityJsonMapper = new NewsEntityJsonMapper();
-        RestApi restApi = new RestApiImpl(this.context, userEntityJsonMapper);
+//        RestApi restApi = new RestApiImpl(this.context, userEntityJsonMapper);
+        HttpInvoker httpClient = CaApplication.getInstance().getHttpInvoker();
 
-        return new NetworkNewsDataStore(restApi, this.newsCache);
+        return new NetworkNewsDataStore(httpClient, this.newsCache);
     }
 }
